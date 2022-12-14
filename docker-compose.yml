@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code  
+    depends_on:
+      - 'postgres'
+
+
+  postgres:
+      container_name: postgres
+      image: postgres:15-alpine
+      restart: always
+      ports:
+        - 5432:5432
+      volumes:
+        - ./postgresdb:/var/lib/postgresql/data
+      environment:
+        - POSTGRES_DB=postgresdb
+        - POSTGRES_USER=admin
+        - POSTGRES_PASSWORD=12345
+        - VIRTUAL_HOST=postgresdb
+        - VIRTUAL_PORT=5432
+  
