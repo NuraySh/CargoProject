@@ -27,3 +27,17 @@ services:
         - VIRTUAL_HOST=postgresdb
         - VIRTUAL_PORT=5432
   
+  celery:
+    restart: always
+    build: 
+      context: .
+      # dockerfile: Dockerfile
+    volumes: 
+      - .:/code
+    # command: ['celery', '-A', 'crossref.tasks', 'worker', '-l', 'INFO']
+    command : ['celery', '-A' , 'cargoproject', 'worker']
+    depends_on: 
+      - "postgres"
+      - "web"
+      
+     
