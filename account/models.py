@@ -1,10 +1,32 @@
 from django.db import models
 from django.contrib.auth.models import  AbstractBaseUser
-from django.utils.crypto import get_random_string
-from .managers import CustomUserManager
+from account.managers import CustomUserManager
+from account.helpers import id_gen
+from django.core.exceptions import ValidationError
 
-def id_gen():
-    return get_random_string(8, allowed_chars='0123456789')
+
+class PhonePrefix(models.Model):
+
+    PREFIXES = [
+        ('1', '+99455'),
+        ('2', '+99450'),
+        ('3', '+99451'),
+        ('4', '+99470'),
+        ('5', '+99477'),
+        ('6', '+99499') ]
+
+    prefix_number = models.CharField(max_length=1, blank=False, null=False, choices=PREFIXES, verbose_name='phone prefixes')
+
+    def __str__(self):
+        return self.prefix_number
+
+class Warehouse(models.Model):
+    BRANCHES = [
+        ('1', 'Ganjlik'),
+        ('2',  'Narimanov'), 
+        ('3',  '20 January')
+    ]
+    name = models.CharField(max_length=1, choices=BRANCHES, blank=False, null=False)
 
 class CustomUser(AbstractBaseUser):
     
@@ -22,22 +44,17 @@ class CustomUser(AbstractBaseUser):
 
     ]
     gender = models.CharField(max_length=1, choices=GENDER)
-    PREFIXES = [
-        ('1', '+99455'),
-        ('2', '+99450'),
-        ('3', '+99451'),
-        ('4', '+99470'),
-        ('5', '+99477'),
-        ('6', '+99499')
-    ]
-    phone_prefix = models.CharField(max_length=1, choices=PREFIXES, blank=False)
+   
+    phone_prefix = models.ForeignKey(PhonePrefix, on_delete=models.CASCADE)
     phone  = models.CharField(max_length=7, blank=False)
     SERIES = [
         ('1', 'AZE'),
-        ('2', 'AA')
+        ('2', 'AA'),
+        ('3', 'MYI'),
+        ('4', 'DYI')
     ]
     gov_id  = models.CharField(max_length=1, choices=SERIES, blank=False, unique=True)
-    pin_code = models.CharField(max_length=6, blank=False, unique=True)
+    pin_code = models.CharField(max_length=7, blank=False, unique=True)
     client_code  = models.CharField(max_length=9, primary_key=True, default=id_gen, editable=False) #do we need to write 'unique = True'?
     monthly_expense = models.CharField(max_length=50)
     birth_date = models.DateField(blank=False)
@@ -45,12 +62,7 @@ class CustomUser(AbstractBaseUser):
     is_active  = models.BooleanField(default=False)
     is_blocked = models.BooleanField(default=False)
     
-    BRANCHES = [
-        ('1', 'Ganjlik'),
-        ('2',  'Narimanov'), 
-        ('3',  '20 January')
-    ]
-    branch = models.CharField(max_length=1, choices=BRANCHES)
+    branch = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
 
 
     USERNAME_FIELD = 'email'
@@ -80,9 +92,30 @@ class CustomUser(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
+    def clean(self):
+        cleaned_data = super().clean()
+        phone = cleaned_data.get('phone')
+
+        if len(phone) != 7:
+            raise ValidationError(
+                'Phone should contain 7 digits'
+            )
+
+    def clean(self):
+        cleaned_data = super().clen()
+        gov_id = cleaned_data.get('gov_id')
+        pass 
+
+    def clean(self):
+        cleaned_data = super().clean()
+        pin_code = cleaned_data.get('pin_code')
+
+        if len(pin_code) != 7:
+            raise ValidationError(
+                'Pin code should contain 7 digits'
+            )
 
     
-
 
 
 
