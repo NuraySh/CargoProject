@@ -3,6 +3,8 @@ from django.contrib.auth.models import  AbstractBaseUser, PermissionsMixin
 from account.managers import CustomUserManager
 from account.helpers import id_gen
 from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+from account.validators import validate_phone, validate_gov_id, validate_pin_code
 
 
 class PhonePrefix(models.Model):
@@ -30,7 +32,7 @@ class Warehouse(models.Model):
 
     def __str__(self):
         return self.name
-
+    
 class CustomUser(AbstractBaseUser,PermissionsMixin):
     
     email = models.EmailField(
@@ -48,26 +50,25 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
     ]
     gender = models.CharField(max_length=1, choices=GENDER)
    
-    phone_prefix = models.OneToOneField(PhonePrefix, on_delete=models.CASCADE, null=True)
-    phone  = models.CharField(max_length=7, blank=False)
+    phone_prefix = models.OneToOneField(PhonePrefix, on_delete=models.CASCADE) #null=True ?
+    phone  = models.CharField(max_length=7, validators=[validate_phone])
     SERIES = [
         ('1', 'AZE'),
         ('2', 'AA'),
         ('3', 'MYI'),
         ('4', 'DYI')
     ]
-    gov_id  = models.CharField(max_length=12, choices=SERIES, blank=False, unique=True, default='AZE')
-    pin_code = models.CharField(max_length=7, blank=True, null=True, unique=True)
+    gov_id_prefix  = models.CharField(max_length=1, choices=SERIES, default='AZE')
+    gov_id = models.CharField(max_length=8, unique=True, validators=[validate_gov_id]) #to check all is number
+    pin_code = models.CharField(max_length=7, unique=True, validators=[validate_pin_code])
     client_code  = models.CharField(max_length=9, primary_key=True, default=id_gen, editable=False) #do we need to write 'unique = True'?
     monthly_expense = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
-    birth_date = models.DateField(null=True)
-   
-    
+    birth_date = models.DateField() #null=True?
+    branch = models.ForeignKey(Warehouse, on_delete=models.CASCADE, null=True)
     is_active  = models.BooleanField(default=False)
     is_blocked = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
-    
-    branch = models.ForeignKey(Warehouse, on_delete=models.CASCADE, null=True)
+  
 
 
     USERNAME_FIELD = 'email'
@@ -97,52 +98,7 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
     def has_module_perms(self, app_label):
         return True
 
-        
-    def clean_phone(self):
-        
-        phone = self.cleaned_data['phone']
-
-        if len(phone) != 7:
-            raise ValidationError(
-                'Phone should contain 7 digits'
-                )
-
-        return phone
-
-
-
-    def clean_pin_code(self):
-
-        pin_code = self.cleaned_data['pin_code']
-
-        if len(pin_code) != 7:
-            raise ValidationError(
-                'Pin code should contain 7 digits'
-            )
-        return pin_code
-
-    def clean_gov_id(self):
-        gov_id_choices = CustomUser.gov_id.field.choices 
-        gov_id = self.cleaned_data['gov_id']
-       
-        for choice in gov_id_choices:
-            if choice[1] == 'AZE':
-                if len(gov_id) != 11:
-                     raise ValidationError(
-                'You should enter 8 digits')
-            
-            elif choice[1] == 'AA':
-                if len(gov_id) != 9:
-                     raise ValidationError(
-                'You should enter 7 digits')
-
-            elif choice[1] == 'MYI' or choice[1] == 'DYI' :
-                if len(gov_id) != 5 or len(gov_id) != 6:
-                     raise ValidationError(
-                'You should enter 5 or 6 digits')
  
-
-
 
 
 
