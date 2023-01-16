@@ -4,7 +4,7 @@ from account.models import validate_gov_id, validate_phone, validate_pin_code
 from django.core.exceptions import ValidationError
 
 
-class TestModelValidators(unittest.TestCase):
+class TestCustomUserValidators(unittest.TestCase):
 
      def test_pincode_validator(self):
          

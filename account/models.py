@@ -76,8 +76,7 @@ class Warehouse(models.Model):
         ('NR',  'Narimanov'),
         ('20Jan',  '20 January')
     ]
-    name = models.CharField(
-        max_length=5, choices=BRANCHES, blank=False, null=False)
+    name = models.CharField(max_length=5, choices=BRANCHES, blank=False, null=False)
 
     def __str__(self):
         return self.name
@@ -95,7 +94,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     
     gender = models.CharField(max_length=1, choices=GENDER)
 
-    phone_prefix = models.OneToOneField(PhonePrefix, on_delete=models.CASCADE, default=7)  # null=True ?
+    phone_prefix = models.ForeignKey(PhonePrefix, on_delete=models.CASCADE, default=7)  # null=True ?
     phone = models.CharField(max_length=7, validators=[validate_phone])
     SERIES = [
         ('1', 'AZE'),
