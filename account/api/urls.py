@@ -1,10 +1,10 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
-from core.api import views
+from account.api import views
 
 urlpatterns = [
-    path('news/', views.NewsList.as_view()),
-    path('countries/', views.CountryList.as_view())
+    path('phoneprefixes/', views.PhonePrefixList.as_view()),
+    
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

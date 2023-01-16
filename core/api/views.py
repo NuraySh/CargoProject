@@ -1,5 +1,5 @@
-from core.models import News
-from core.api.serializers import NewsSerializer
+from core.models import News, Country
+from core.api.serializers import NewsSerializer, CountrySerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -15,3 +15,10 @@ class NewsList(APIView):
         serializer = NewsSerializer(news, many=True)
         return Response(serializer.data)
 
+
+class CountryList(APIView):
+
+     def get(self, request, format=None):
+        countries = Country.objects.all()
+        serializer = CountrySerializer(countries, many=True)
+        return Response(serializer.data)
