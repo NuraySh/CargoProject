@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-o63#gfsqi!uoqbjc-#e)mp$)x)p90$yn7vcp4*)uct&(=vzubg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0',  'localhost']
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    
+     #third-party apps
+     'rest_framework',
     #local apps
     'account',
     'core'
@@ -138,3 +140,4 @@ CELERY_BROKER_URL = "redis://localhost:6379"
 CELERY_RESULT_BACKEND = "redis://localhost:6379"
 
 AUTH_USER_MODEL = "account.CustomUser"
+
