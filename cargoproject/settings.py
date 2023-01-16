@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    
+     #third-party apps
+     'rest_framework',
     #local apps
     'account',
     'core'
@@ -138,5 +140,4 @@ CELERY_BROKER_URL = "redis://localhost:6379"
 CELERY_RESULT_BACKEND = "redis://localhost:6379"
 
 AUTH_USER_MODEL = "account.CustomUser"
-
 

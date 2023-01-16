@@ -29,8 +29,7 @@ class Warehouse(models.Model):
         ('NR',  'Narimanov'),
         ('20Jan',  '20 January')
     ]
-    name = models.CharField(
-        max_length=5, choices=BRANCHES, blank=False, null=False)
+    name = models.CharField(max_length=5, choices=BRANCHES, blank=False, null=False)
 
     def __str__(self):
         return self.name
