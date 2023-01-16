@@ -9,8 +9,7 @@ admin.site.register(News)
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
     list_display = ('name', 'enabled' )
-#     list_display_links = None
-#     # list_filter = ('category', 'available')
-#     # list_editable = ( 'name',)
-    
-    # prepopulated_fields = {'slug': ('name',)}
+
+class NewsAdmin(admin.ModelAdmin):
+    list_display = ('title', 'category', 'add_time')
+    prepopulated_fields = {"slug": ("title",)}
