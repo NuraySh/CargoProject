@@ -3,7 +3,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from account.api import views
 
 urlpatterns = [
-    path('phoneprefixes/', views.PhonePrefixList.as_view()),
+    path('phone-prefixes/', views.PhonePrefixList.as_view()),
     
 ]
 
