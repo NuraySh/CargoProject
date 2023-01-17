@@ -4,7 +4,7 @@ from core.api import views
 
 urlpatterns = [
     path('news/', views.NewsList.as_view()),
-    path('countrues/', views.CountryList.as_view())
+    path('countries/', views.CountryList.as_view())
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
