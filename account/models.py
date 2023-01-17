@@ -47,7 +47,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     
     gender = models.CharField(max_length=1, choices=GENDER)
 
-    phone_prefix = models.OneToOneField(PhonePrefix, on_delete=models.CASCADE)
+    phone_prefix = models.ForeignKey(PhonePrefix, on_delete=models.CASCADE)
     phone = models.CharField(max_length=7, validators=[validate_phone])
     SERIES = [
         ('1', 'AZE'),
