@@ -6,7 +6,6 @@ from django.utils.translation import gettext_lazy as _
 from account.validators import validate_gov_id, validate_phone, validate_pin_code
 
 
-
 class PhonePrefix(models.Model):
 
     PREFIXES = [
@@ -60,7 +59,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     pin_code = models.CharField(max_length=7, unique=True, validators=[validate_pin_code])
     client_code = models.CharField(max_length=9, primary_key=True, default=id_gen, editable=False)
     monthly_expense = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
-    birth_date = models.DateField() 
+    birth_date = models.DateField()
     branch = models.ForeignKey(Warehouse, on_delete=models.CASCADE) 
     is_active = models.BooleanField(default=False)
     is_blocked = models.BooleanField(default=False)

@@ -11,6 +11,6 @@ class PhonePrefixList(APIView):
     List all news, or create a new news.
     """
     def get(self, request, format=None):
-        news = PhonePrefix.objects.all()
-        serializer = PhonePrefixSerializer(news, many=True)
+        phoneprefix = PhonePrefix.objects.all()
+        serializer = PhonePrefixSerializer(phoneprefix, many=True)
         return Response(serializer.data)
