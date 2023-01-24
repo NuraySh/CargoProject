@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class NewsCategory(models.Model):
@@ -42,3 +43,31 @@ class Country(models.Model):
     def __str__(self):
         return self.name
     
+
+
+class ProductSubType(models.Model):
+
+    title = models.CharField(max_length=100, verbose_name=_('product sub type name'))
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = _("Product Sub Type")
+        verbose_name_plural = _("Product Sub Types")
+        ordering = ['title']
+
+    def __str__(self):
+        return self.title
+class ProductType(models.Model):
+     
+     title = models.CharField(max_length=100, verbose_name=_('product type name'))
+     sub_type_title = models.ForeignKey(ProductSubType, on_delete= models.CASCADE)
+     is_active = models.BooleanField(default=True)
+
+     class Meta:
+        verbose_name = _("Product Type")
+        verbose_name_plural = _("Product Types")
+        ordering = ['title']
+
+     def __str__(self):
+        return self.title
+
