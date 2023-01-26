@@ -1,8 +1,10 @@
 from django.contrib import admin
-from core.models import NewsCategory, News, Country
+from core.models import NewsCategory, News, Country, ProductType
+from mptt.admin import MPTTModelAdmin
 # Register your models here.
 
 admin.site.register(NewsCategory)
+admin.site.register(ProductType, MPTTModelAdmin)
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
