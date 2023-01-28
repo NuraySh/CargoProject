@@ -64,3 +64,7 @@ class ContactUs(SingletonModel):
     phone = models.CharField(max_length=20) 
     address = models.TextField()
     work_hours = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = 'Contact Us'
+        verbose_name_plural = 'Contact Us'
