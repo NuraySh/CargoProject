@@ -42,3 +42,25 @@ class Country(models.Model):
     def __str__(self):
         return self.name
     
+
+class SingletonModel(models.Model):
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super(SingletonModel, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        pass
+
+    @classmethod
+    def load(cls):
+        obj, created = cls.objects.get_or_create(pk=1)
+        return obj
+
+class ContactUs(SingletonModel):
+    email = models.EmailField()
+    phone = models.CharField(max_length=20) 
+    address = models.TextField()
+    work_hours = models.CharField(max_length=50)
