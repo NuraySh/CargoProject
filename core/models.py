@@ -42,3 +42,18 @@ class Country(models.Model):
     def __str__(self):
         return self.name
     
+
+
+class Currency(models.Model):
+
+    name = models.CharField(max_length=4, verbose_name='currency name')
+    sign = models.CharField(max_length=1, verbose_name='currency sign')
+    rate = models.DecimalField(max_digits=5, decimal_places=4)
+
+
+    class Meta:
+        verbose_name = 'Currency'
+        verbose_name_plural = 'Currencies'
+
+    def __str_(self):
+        return self.name
