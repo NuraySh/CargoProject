@@ -44,7 +44,8 @@ INSTALLED_APPS = [
      'mptt',
     #local apps
     'account',
-    'core'
+    'core', 
+    'tariff'
 ]
 
 MIDDLEWARE = [
