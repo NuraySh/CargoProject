@@ -1,6 +1,7 @@
+import datetime
 from django.db import models
-
-
+from django.utils.translation import gettext_lazy as _
+from account.models import CustomUser
 class NewsCategory(models.Model):
 
     title = models.CharField(max_length=50, blank=False)
