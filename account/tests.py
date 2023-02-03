@@ -1,5 +1,5 @@
 import unittest
-from account.models import validate_gov_id, validate_phone, validate_pin_code
+from account.validators import validate_gov_id, validate_phone, validate_pin_code
 from django.core.exceptions import ValidationError
 from account.factories import CustomUserFactory
 
