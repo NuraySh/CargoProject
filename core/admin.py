@@ -1,5 +1,6 @@
 from django.contrib import admin
-from core.models import NewsCategory, News, Country, ContactUs
+from core.models import NewsCategory, News, Country, ContactUs, Currency
+
 # Register your models here.
 
 admin.site.register(NewsCategory)
@@ -7,6 +8,10 @@ admin.site.register(NewsCategory)
 @admin.register(ContactUs)
 class ContactUsAdmin(admin.ModelAdmin):
     list_display = ('email', 'phone', 'address', 'work_hours',)
+@admin.register(Currency)
+class CountryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'sign', 'rate', )
+
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
     list_display = ('name', 'enabled' )
