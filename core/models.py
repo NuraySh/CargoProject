@@ -55,7 +55,7 @@ class FAQ_Category(models.Model):
 
     def __str__(self):
         return self.name
-   
+
 class FAQ(models.Model):
 
 
@@ -65,8 +65,8 @@ class FAQ(models.Model):
         (ACTIVE,    _('Active')),
         (INACTIVE,  _('Inactive')),
         )
-    
-    
+
+
     question = models.TextField(_('question'))
     answer = models.TextField(_('answer'), blank=True)
     faq_category = models.ForeignKey(FAQ_Category, verbose_name=_('faq category'), related_name='questions')
@@ -74,14 +74,14 @@ class FAQ(models.Model):
     sort_order = models.IntegerField(_('sort order'), default=0, help_text=_('The order you would like the question to be displayed.'))
     status = models.IntegerField(_('status'),
         choices=STATUS_CHOICES, default=INACTIVE)
-    
+
     created_on = models.DateTimeField(_('created on'), default=datetime.datetime.now)
     updated_on = models.DateTimeField(_('updated on'))
     created_by = models.ForeignKey(CustomUser, verbose_name=_('created by'),
         null=True)
     updated_by = models.ForeignKey(CustomUser, verbose_name=_('updated by'),
         null=True)    
-    
+
 
 
     class Meta:
@@ -95,3 +95,25 @@ class FAQ(models.Model):
 
 
 
+
+
+
+
+
+
+
+
+
+class Currency(models.Model):
+
+    name = models.CharField(max_length=4, verbose_name='currency name')
+    sign = models.CharField(max_length=1, verbose_name='currency sign')
+    rate = models.DecimalField(max_digits=5, decimal_places=4)
+
+
+    class Meta:
+        verbose_name = 'Currency'
+        verbose_name_plural = 'Currencies'
+
+    def __str__(self):
+        return self.name
