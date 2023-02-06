@@ -9,11 +9,16 @@ click-didyoumean==0.3.0
 click-plugins==1.1.1
 click-repl==0.2.0
 Django==4.1.4
+django-js-asset==2.0.0
+django-mptt==0.14.0
 djangorestframework==3.14.0
+factory-boy==3.2.1
+Faker==16.6.1
 kombu==5.2.4
 Pillow==9.3.0
 prompt-toolkit==3.0.36
 pycodestyle==2.10.0
+python-dateutil==2.8.2
 pytz==2022.6
 redis==4.4.0
 six==1.16.0
