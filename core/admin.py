@@ -1,9 +1,10 @@
 from django.contrib import admin
-from core.models import NewsCategory, News, Country, ContactUs, Currency
+from core.models import NewsCategory, News, Country, ContactUs, Currency, ProductType
 
 # Register your models here.
 
 admin.site.register(NewsCategory)
+admin.site.register(ProductType)
 
 @admin.register(ContactUs)
 class ContactUsAdmin(admin.ModelAdmin):

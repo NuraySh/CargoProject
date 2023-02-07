@@ -105,7 +105,16 @@ class ContactUs(SingletonModel):
         verbose_name = 'Contact Us'
         verbose_name_plural = 'Contact Us'
 
-
+class ProductType(models.Model):
+    main_category = models.CharField(max_length=100, verbose_name='category name')
+    sub_category = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, verbose_name='sub category name')
+    
+    class Meta:
+        verbose_name = 'Type of products'
+        verbose_name_plural = 'Types of products'
+    
+    def __str__(self):
+        return self.main_category
 class Currency(models.Model):
 
     name = models.CharField(max_length=4, verbose_name='currency name')
