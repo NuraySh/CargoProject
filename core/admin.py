@@ -1,12 +1,14 @@
 from django.contrib import admin
-from core.models import NewsCategory, News, Country, ProductType
-from mptt.admin import MPTTModelAdmin
-from core.models import NewsCategory, News, Country, Currency 
+from core.models import NewsCategory, News, Country, ContactUs, Currency, ProductType
+
 # Register your models here.
 
 admin.site.register(NewsCategory)
-admin.site.register(ProductType, MPTTModelAdmin)
+admin.site.register(ProductType)
 
+@admin.register(ContactUs)
+class ContactUsAdmin(admin.ModelAdmin):
+    list_display = ('email', 'phone', 'address', 'work_hours',)
 @admin.register(Currency)
 class CountryAdmin(admin.ModelAdmin):
     list_display = ('name', 'sign', 'rate', )

@@ -2,7 +2,7 @@ import datetime
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from account.models import CustomUser
-
+from core.abstracts import SingletonModel
 class NewsCategory(models.Model):
 
     title = models.CharField(max_length=50, blank=False)
@@ -94,6 +94,16 @@ class FAQ(models.Model):
     def __str__(self):
         return self.question
 
+    
+class ContactUs(SingletonModel):
+    email = models.EmailField()
+    phone = models.CharField(max_length=20) 
+    address = models.TextField()
+    work_hours = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = 'Contact Us'
+        verbose_name_plural = 'Contact Us'
 
 class ProductType(models.Model):
     main_category = models.CharField(max_length=100, verbose_name='category name')
@@ -105,8 +115,6 @@ class ProductType(models.Model):
     
     def __str__(self):
         return self.main_category
-
-
 class Currency(models.Model):
 
     name = models.CharField(max_length=4, verbose_name='currency name')
