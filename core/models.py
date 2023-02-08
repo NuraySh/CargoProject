@@ -128,3 +128,20 @@ class Currency(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class LocalWarehouse(models.Model):
+
+    address = models.CharField(max_length=255, verbose_name='local warehouse address')
+    display_name = models.CharField(max_length=100, verbose_name='local warehouse name')
+    longitude = models.FloatField(blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True)
+    active = models.BooleanField(default=True)
+    display_order = models.IntegerField(default=0, verbose_name='local warehouse display order')
+    
+    class Meta:
+        verbose_name = 'Local Warehouse'
+        verbose_name_plural = 'Local Warehouses'
+    
+    def __str__(self):
+        return self.display_name
