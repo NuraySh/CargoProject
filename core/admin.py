@@ -1,10 +1,11 @@
 from django.contrib import admin
-from core.models import NewsCategory, News, Country, ContactUs, Currency, ProductType
+from core.models import NewsCategory, News, Country, ContactUs, Currency, ProductType, ForeignWarehouse
 
 # Register your models here.
 
 admin.site.register(NewsCategory)
 admin.site.register(ProductType)
+
 
 @admin.register(ContactUs)
 class ContactUsAdmin(admin.ModelAdmin):
@@ -20,3 +21,7 @@ class CountryAdmin(admin.ModelAdmin):
 class NewsAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'add_time')
     prepopulated_fields = {"slug": ("title",)}
+
+@admin.register(ForeignWarehouse)
+class ForeignWarehouseAdmin(admin.ModelAdmin):
+    list_display = ('country', 'address_header', )
