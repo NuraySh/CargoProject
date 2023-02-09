@@ -124,3 +124,29 @@ class LocalWarehouse(models.Model):
     
     def __str__(self):
         return self.display_name
+
+
+class ForeignWarehouse(models.Model):
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, verbose_name='foreign country warehouse')
+    is_active = models.BooleanField(default=True)
+    airwaybill_address = models.CharField(max_length=255, verbose_name='airwaybill address')
+    address_header = models.CharField(max_length=100, verbose_name='address header')
+    name_surname = models.ManyToManyField(CustomUser,verbose_name='name and surname' )
+    address_1 = models.CharField(max_length=150)
+    city = models.CharField(max_length=100)
+    province = models.CharField(max_length=100)
+    district = models.CharField(max_length=100)
+    zip_code = models.CharField(max_length=15)
+    mobile = models.CharField(max_length=20)
+    gov_id = models.CharField(max_length=255, null=True, default='99674408434')
+
+    class Meta:
+        verbose_name = 'Foreign Warehouse'
+        verbose_name_plural = 'Foreign Warehouses'
+
+    def __str__(self):
+        return self.country
+    
+    def save(self, *args, **kwargs):
+        self.name_surname = CustomUser.get_full_name()
+        super(ForeignWarehouse, self).save(*args, **kwargs)
