@@ -22,3 +22,20 @@ class PackageCost(models.Model):
 
     def __str__(self):
         return self.weight_type
+
+class PenaltyTariff(models.Model):
+    FIXED_OR_PERCENTAGE_CHOICES = [
+        ('fixed', 'Fixed'),
+        ('percentage', 'Percentage'),
+    ]
+    starting_from = models.DateField()
+    till = models.DateField()
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    fixed_or_percentage = models.CharField(max_length=10, choices=FIXED_OR_PERCENTAGE_CHOICES)
+
+    class Meta:
+        verbose_name = 'Penalty Tariff'
+        verbose_name_plural = 'Penalty Tariffs'
+
+    def __str__(self):
+        return f"{self.starting_from} - {self.till}: {self.amount} '' ({self.fixed_or_percentage})"
