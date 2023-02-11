@@ -1,8 +1,6 @@
 from django.contrib import admin
-from core.models import NewsCategory, News, Country, ContactUs, Currency, LocalWarehouse, ForeignWarehouse, ProductType, FAQ, FAQ_Category
+from core.models import NewsCategory, News, Country, ContactUs, Currency, ForeignWarehouse,  LocalWarehouse,ProductType, FAQ, FAQ_Category, Discount 
 
-
-# Register your models here.
 
 admin.site.register(NewsCategory)
 admin.site.register(ProductType)
@@ -31,4 +29,9 @@ class ForeignWarehouseAdmin(admin.ModelAdmin):
 @admin.register(LocalWarehouse)
 class LocalWarehouseAdmin(admin.ModelAdmin):
     list_display = ('display_name', 'address', 'active',)
+
+@admin.register(Discount)
+class DicountAdmin(admin.ModelAdmin):
+    list_display = ('reason','constant_or_percentage', 'amount', )
+    
     
