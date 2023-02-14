@@ -150,3 +150,21 @@ class ForeignWarehouse(models.Model):
     def save(self, *args, **kwargs):
         self.name_surname = CustomUser.get_full_name()
         super(ForeignWarehouse, self).save(*args, **kwargs)
+
+class Discount(models.Model):
+    CONSTANT = 'C'
+    PERCENTAGE = 'P'
+    DISCOUNT_TYPE_CHOICES = [
+        (CONSTANT, 'Constant'),
+        (PERCENTAGE, 'Percentage'),
+    ]
+    constant_or_percentage = models.CharField(max_length=1, choices=DISCOUNT_TYPE_CHOICES,verbose_name='constant or percentage')
+    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='discount amount')
+    reason = models.CharField(max_length=150, unique=True, verbose_name='discount reason')
+    
+    class Meta:
+        verbose_name = 'Discount'
+        verbose_name_plural = 'Discounts'
+
+    def __str__(self):
+        return self.reason
