@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     #local apps
     'account',
     'core', 
-    'tariff'
+    'tariff',
+    'declaration'
 ]
 
 MIDDLEWARE = [
