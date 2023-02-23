@@ -8,4 +8,4 @@ class PackageDeclarationAdmin(admin.ModelAdmin):
 
 @admin.register(PackageStatus)
 class PackageStatusAdmin(admin.ModelAdmin):
-    list_display = ('status', 'date_updated', )
+    list_display = ('status_name',)

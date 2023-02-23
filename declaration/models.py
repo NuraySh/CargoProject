@@ -3,14 +3,16 @@ from core.models import Discount, CustomUser, Currency, Country, LocalWarehouse,
 
 
 class PackageStatus(models.Model):
-    status = models.CharField(max_length=50, verbose_name='package status name')
-    date_updated = models.DateTimeField(auto_now=True)
+    status_name = models.CharField(max_length=100)
+    next_status = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+    order = models.IntegerField()
+    
     class Meta:
-        verbose_name = 'Package status'
-        verbose_name_plural = 'Package status'
+        verbose_name = 'Package Status'
+        verbose_name_plural = 'Package Status'
 
     def __str__(self):
-        return self.status
+        return self.status_name
 class PackageDeclaration(models.Model):
 
     PACKAGE_STATUS = [
