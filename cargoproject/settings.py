@@ -89,8 +89,18 @@ DATABASES = {
         'USER': os.environ.get('POSTGRES_USER'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
         'HOST': os.environ.get('POSTGRES_HOST'),
-        'PORT': os.environ.get('POSTGRES_PORT')
-} }
+        'PORT': os.environ.get('POSTGRES_PORT'), 
+    },
+
+    #     'TEST_DB_NAME': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': 'mytestdatabase.sqlite3',
+    #     # 'USER': 'mytestdatabaseuser',
+    #     # 'PASSWORD': 'mypassword',
+    #     # 'HOST': '127.0.0.1',
+    #     # 'PORT': '5433',
+    # }
+} 
 
 
 # Password validation

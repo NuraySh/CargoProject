@@ -10,22 +10,13 @@ def validate_phone(value):
             _('Phone should be numbers and 7 digits')
         )
         
-def validate_gov_id(value):
-
-    prefixes = ['AZE', 'AA', 'MYI', 'DYI']
-    
-    if re.match('^[0-9]+$', value):
-        for choice in prefixes:
-            if re.match('^(AZE)$', choice) and re.match('^\d{8}$', value):
-                break
-            elif re.match('^(AA)$', choice) and re.match('^\d{7}$', value):
-                break
-            elif re.match('^(MYI)$', choice) and re.match('^\d{5}:\{6}$', value):
-                break
-            elif re.match('^(DYI)$', choice) and re.match('^\d{5}:\{6}$', value):
-                break
-            else:
-                raise ValidationError(_('Enter right digit'))
+def validate_gov_id(value, gov_id_prefix):
+    if gov_id_prefix == 'AZE' and not re.match('^\d{8}$', value):
+        raise ValidationError("The gov_id must be 8 characters long when gov_id_prefix is 'AZE'")
+    elif gov_id_prefix == 'AA' and not re.match('^\d{7}$', value):
+        raise ValidationError("The gov_id must be 7 characters long when gov_id_prefix is 'AA'")
+    elif (gov_id_prefix == 'MYI' or gov_id_prefix == 'DYI') and not re.match('^\d{5,6}$', value):
+        raise ValidationError("The gov_id must be 5 or 6 characters long when gov_id_prefix is 'MYI' or 'DYI'")
             
 
 
