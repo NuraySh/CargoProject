@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from core.models import Discount, CustomUser, Currency, Country, LocalWarehouse, ProductType
 
 
@@ -53,3 +54,16 @@ class PackageDeclaration(models.Model):
         return f'User: {self.user} - tracking code: {self.tracking_code}'
 
 
+class PackageStatusHistory(models.Model):
+    declaration = models.ForeignKey(PackageDeclaration, on_delete=models.CASCADE)
+    status = models.CharField(max_length=50)
+    date_changed = models.DateTimeField(default=timezone.now)
+
+
+    class Meta:
+        verbose_name = 'Status History'
+        verbose_name_plural = 'Status History'
+        ordering = ['-date_changed']
+
+    def __str__(self):
+        return self.status
