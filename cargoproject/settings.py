@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+# import factory
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -153,3 +154,4 @@ CELERY_RESULT_BACKEND = "redis://localhost:6379"
 
 AUTH_USER_MODEL = "account.CustomUser"
 
+# factory.Faker._DEFAULT_LOCALE = 'en_US'

@@ -36,7 +36,7 @@ class Warehouse(models.Model):
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
 
-    email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
+    email = models.EmailField(verbose_name='email address', max_length=255, unique=True, null=True)
     first_name = models.CharField(max_length=25, verbose_name='first name')
     last_name = models.CharField(max_length=25, verbose_name='first name')
 
@@ -46,7 +46,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     
     gender = models.CharField(max_length=1, choices=GENDER)
 
-    phone_prefix = models.ForeignKey(PhonePrefix, on_delete=models.CASCADE)
+    phone_prefix = models.ForeignKey(PhonePrefix, on_delete=models.CASCADE, null=True)
     phone = models.CharField(max_length=7, validators=[validate_phone])
     SERIES = [
         ('1', 'AZE'),
@@ -56,11 +56,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     ]
     gov_id_prefix = models.CharField(max_length=1, choices=SERIES, default='AZE')
     gov_id = models.CharField(max_length=8, unique=True, validators=[validate_gov_id])
-    pin_code = models.CharField(max_length=7, unique=True, validators=[validate_pin_code])
-    client_code = models.CharField(max_length=9, primary_key=True, default=id_gen, editable=False)
+    pin_code = models.CharField(max_length=7, unique=True, validators=[validate_pin_code]) 
+    client_code = models.CharField(max_length=9, primary_key=True, default=id_gen, editable=False) #have to change
     monthly_expense = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
-    birth_date = models.DateField()
-    branch = models.ForeignKey(Warehouse, on_delete=models.CASCADE) 
+    birth_date = models.DateField(null=True)
+    branch = models.ForeignKey(Warehouse, on_delete=models.CASCADE, null=True) 
     is_active = models.BooleanField(default=False)
     is_blocked = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
