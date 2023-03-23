@@ -15,11 +15,6 @@ class PackageStatus(models.Model):
     def __str__(self):
         return self.status_name
 class PackageDeclaration(models.Model):
-
-    PACKAGE_STATUS = [
-        ('FW', 'Foreign Warehouse'),
-        ( 'LW', 'Local Warehouse'),
-    ]
     tracking_code = models.CharField(max_length=50, unique=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     discounted_price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -56,9 +51,8 @@ class PackageDeclaration(models.Model):
 
 class PackageStatusHistory(models.Model):
     declaration = models.ForeignKey(PackageDeclaration, on_delete=models.CASCADE)
-    status = models.CharField(max_length=50)
+    status = models.ForeignKey(PackageStatus, on_delete=models.CASCADE)
     date_changed = models.DateTimeField(default=timezone.now)
-
 
     class Meta:
         verbose_name = 'Status History'
