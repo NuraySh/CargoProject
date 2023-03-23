@@ -1,5 +1,5 @@
 from django.contrib import admin
-from declaration.models import PackageDeclaration, PackageStatus, PackageStatusHistory
+from declaration.models import PackageDeclaration, PackageStatus
 
 @admin.register(PackageDeclaration)
 class PackageDeclarationAdmin(admin.ModelAdmin):
@@ -10,6 +10,6 @@ class PackageDeclarationAdmin(admin.ModelAdmin):
 class PackageStatusAdmin(admin.ModelAdmin):
     list_display = ('status_name',)
 
-@admin.register(PackageStatusHistory)
-class PackageStatusHistoryAdmin(admin.ModelAdmin):
-    list_display = ('status', 'date_changed', )
+# @admin.register(PackageStatusHistory)
+# class PackageStatusHistoryAdmin(admin.ModelAdmin):
+#     list_display = ('status', 'date_changed', )

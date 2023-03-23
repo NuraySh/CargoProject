@@ -2,9 +2,8 @@ from django.db import models
 from django.utils import timezone
 from core.models import Discount, CustomUser, Currency, Country, LocalWarehouse, ProductType
 
-
 class PackageStatus(models.Model):
-    status_name = models.CharField(max_length=100)
+    status_name= models.CharField(max_length=100)
     next_status = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     order = models.IntegerField()
     
@@ -14,6 +13,7 @@ class PackageStatus(models.Model):
 
     def __str__(self):
         return self.status_name
+    
 class PackageDeclaration(models.Model):
     tracking_code = models.CharField(max_length=50, unique=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -47,10 +47,25 @@ class PackageDeclaration(models.Model):
 
     def __str__(self):
         return f'User: {self.user} - tracking code: {self.tracking_code}'
+    
+    def save(self, *args, **kwargs):
+        is_new_declaration = False
+        old_declaration = None
+        
+        if self.pk is None:
+            is_new_declaration = True
+        else:
+            old_declaration = PackageDeclaration.objects.get(pk=self.pk)
+
+        super(PackageDeclaration, self).save(*args, **kwargs)
+
+        if is_new_declaration or old_declaration.status != self.status:
+            status_history = PackageStatusHistory(package=self, status=self.status)
+            status_history.save()
 
 
 class PackageStatusHistory(models.Model):
-    declaration = models.ForeignKey(PackageDeclaration, on_delete=models.CASCADE)
+    package = models.ForeignKey(PackageDeclaration, on_delete=models.CASCADE)
     status = models.ForeignKey(PackageStatus, on_delete=models.CASCADE)
     date_changed = models.DateTimeField(default=timezone.now)
 
