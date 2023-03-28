@@ -16,21 +16,21 @@ class PackageStatus(models.Model):
     
 class PackageDeclaration(models.Model):
     tracking_code = models.CharField(max_length=50, unique=True, blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    discounted_price = models.DecimalField(max_digits=10, decimal_places=2)
-    currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
-    status = models.ForeignKey(PackageStatus, on_delete=models.CASCADE)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    country = models.ForeignKey(Country, on_delete=models.CASCADE)
-    destination_warehouse = models.ForeignKey(LocalWarehouse, on_delete=models.CASCADE)
-    product_type = models.ForeignKey(ProductType, on_delete=models.CASCADE)
-    weight = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    discounted_price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True)
+    status = models.ForeignKey(PackageStatus, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True)
+    destination_warehouse = models.ForeignKey(LocalWarehouse, on_delete=models.CASCADE, null=True)
+    product_type = models.ForeignKey(ProductType, on_delete=models.CASCADE, null=True)
+    weight = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     discounts = models.ManyToManyField(Discount, related_name='declarations', blank=True)
     is_liquid = models.BooleanField(default=False)
-    shop_name = models.CharField(max_length=100)
+    shop_name = models.CharField(max_length=100, null=True)
     file = models.FileField(upload_to='declarations/')
     image = models.ImageField(upload_to='declarations/')
-    quantity = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField(null=True)
     is_paid = models.BooleanField(default=False)
     penalty_status = models.BooleanField(default=False)
     penalty = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
@@ -49,17 +49,12 @@ class PackageDeclaration(models.Model):
         return f'User: {self.user} - tracking code: {self.tracking_code}'
     
     def save(self, *args, **kwargs):
-        is_new_declaration = False
-        old_declaration = None
-        
-        if self.pk is None:
-            is_new_declaration = True
-        else:
-            old_declaration = PackageDeclaration.objects.get(pk=self.pk)
-
+        print('save is called')
+        new_status = self.status
         super(PackageDeclaration, self).save(*args, **kwargs)
-
-        if is_new_declaration or old_declaration.status != self.status:
+        print(f' new_status: {self.status}')
+        # if the declaration is new or the status has changed, create a new status history entry
+        if new_status:
             status_history = PackageStatusHistory(package=self, status=self.status)
             status_history.save()
 
