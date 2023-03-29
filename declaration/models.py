@@ -58,7 +58,6 @@ class PackageDeclaration(models.Model):
                 status_history = PackageStatusHistory(package=self, status=self.status)
                 status_history.save()
 
-        self.cache_status = self.status
         super().save(*args, **kwargs)
 
 
