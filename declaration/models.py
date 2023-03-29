@@ -48,15 +48,18 @@ class PackageDeclaration(models.Model):
     def __str__(self):
         return f'User: {self.user} - tracking code: {self.tracking_code}'
     
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.cache_status = self.status
+
     def save(self, *args, **kwargs):
-        print('save is called')
-        new_status = self.status
-        super(PackageDeclaration, self).save(*args, **kwargs)
-        print(f' new_status: {self.status}')
-        # if the declaration is new or the status has changed, create a new status history entry
-        if new_status:
-            status_history = PackageStatusHistory(package=self, status=self.status)
-            status_history.save()
+        if self.pk is not None:
+            if self.status != self.cache_status:
+                status_history = PackageStatusHistory(package=self, status=self.status)
+                status_history.save()
+
+        self.cache_status = self.status
+        super().save(*args, **kwargs)
 
 
 class PackageStatusHistory(models.Model):
