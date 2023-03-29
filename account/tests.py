@@ -27,7 +27,7 @@ class TestCustomUserValidators(django.test.TestCase):
         self.assertEqual(len(user.pin_code), 7)
 
     def test_invalid_pin_code(self):
-        user = CustomUserFactory.create(pin_code='5zxu4prf')
+        user = CustomUserFactory.create(pin_code='5zxu4prs')
         with self.assertRaises(ValidationError):
             validate_pin_code(user.pin_code)
 
