@@ -4,6 +4,7 @@ from account.managers import CustomUserManager
 from account.helpers import id_gen
 from django.utils.translation import gettext_lazy as _
 from account.validators import validate_gov_id, validate_phone, validate_pin_code
+from django.core.exceptions import ValidationError
 
 
 class PhonePrefix(models.Model):
@@ -35,6 +36,8 @@ class Warehouse(models.Model):
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
+
+    is_cleaned = False
 
     email = models.EmailField(verbose_name='email address', max_length=255, unique=True, null=True)
     first_name = models.CharField(max_length=25, verbose_name='first name')
@@ -72,6 +75,17 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+    # def clean(self):
+    #     validate_gov_id(self.gov_id, self.gov_id_prefix)
+
+    
+    def save(self, *args, **kwargs):
+        if not self.is_cleaned:
+            self.full_clean()
+        super(CustomUser, self).save(*args, **kwargs)
+
+    
 
     def get_full_name(self):
         full_name = '%s %s' % (self.first_name, self.last_name)
