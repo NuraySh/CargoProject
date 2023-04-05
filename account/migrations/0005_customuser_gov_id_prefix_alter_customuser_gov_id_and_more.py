@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='customuser',
             name='gov_id',
-            field=models.CharField(max_length=8, unique=True, validators=[account.models.validate_gov_id]),
+            field=models.CharField(max_length=8, unique=True),
         ),
         migrations.AlterField(
             model_name='customuser',

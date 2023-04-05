@@ -10,10 +10,6 @@ def validate_phone(value):
             _('Phone should be numbers and 7 digits')
         )
         
-def validate_gov_id(value):
-    if not re.match('^\d{8}$', value) and not re.match('^\d{7}$', value) and not re.match('^\d{5,6}$', value):
-        raise ValidationError(_("The gov_id length is not correct"))
-    
 
 
 def validate_pin_code(value):
@@ -22,3 +18,4 @@ def validate_pin_code(value):
             _('Pin code should contain 7 digits')
         )
     
+

@@ -1,9 +1,10 @@
 from django.db import models
+import re
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from account.managers import CustomUserManager
 from account.helpers import id_gen
 from django.utils.translation import gettext_lazy as _
-from account.validators import validate_gov_id, validate_phone, validate_pin_code
+from account.validators import validate_phone, validate_pin_code
 from django.core.exceptions import ValidationError
 
 
@@ -52,13 +53,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     phone_prefix = models.ForeignKey(PhonePrefix, on_delete=models.CASCADE, null=True)
     phone = models.CharField(max_length=7, validators=[validate_phone])
     SERIES = [
-        ('1', 'AZE'),
-        ('2', 'AA'),
-        ('3', 'MYI'),
-        ('4', 'DYI')
+        ('AZE', 'AZE'),
+        ('AA', 'AA'),
+        ('MYI', 'MYI'),
+        ('DYI', 'DYI')
     ]
-    gov_id_prefix = models.CharField(max_length=1, choices=SERIES, default='AZE')
-    gov_id = models.CharField(max_length=8, unique=True, validators=[validate_gov_id])
+    gov_id_prefix = models.CharField(max_length=3, choices=SERIES, default='AZE')
+    gov_id = models.CharField(max_length=8, unique=True)
     pin_code = models.CharField(max_length=7, unique=True, validators=[validate_pin_code]) 
     client_code = models.CharField(max_length=9, primary_key=True, default=id_gen, editable=False) #have to change
     monthly_expense = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
@@ -76,16 +77,26 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
     
-    # def clean(self):
-    #     validate_gov_id(self.gov_id, self.gov_id_prefix)
-
+    def clean(self):
+        super().clean()
+        
+        # Validate gov_id length based on gov_id_prefix
+        prefix = self.gov_id_prefix
+        gov_id_length = len(self.gov_id)
+        
+        if prefix == 'AZE' and gov_id_length != 8:
+            raise ValidationError("The gov_id field length must be 8 for AZE prefix.")
+        elif prefix == 'AA' and gov_id_length != 7:
+            raise ValidationError("The gov_id field length must be 7 for AA prefix.")
+        elif prefix == 'MYI' and (gov_id_length != 6 and gov_id_length != 5):
+            raise ValidationError("The gov_id field length must be 5 or 6 for MYI prefix.")
+        elif prefix == 'DYI' and (gov_id_length != 6 and gov_id_length != 5):
+            raise ValidationError("The gov_id field length must be 5 or 6 for DYI prefix.")
     
     def save(self, *args, **kwargs):
-        if not self.is_cleaned:
-            self.full_clean()
+        self.full_clean()
         super(CustomUser, self).save(*args, **kwargs)
 
-    
 
     def get_full_name(self):
         full_name = '%s %s' % (self.first_name, self.last_name)
@@ -93,10 +104,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.first_name.strip()
-
-    # @property
-    # def is_staff(self):
-    #     return self.is_admin
 
     def has_perm(self, perm, obj=None):
         return True
