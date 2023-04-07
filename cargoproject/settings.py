@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+# import factory
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,7 +42,6 @@ INSTALLED_APPS = [
     
      #third-party apps
      'rest_framework',
-     'mptt',
     #local apps
     'account',
     'core', 
@@ -90,8 +90,8 @@ DATABASES = {
         'USER': os.environ.get('POSTGRES_USER'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
         'HOST': os.environ.get('POSTGRES_HOST'),
-        'PORT': os.environ.get('POSTGRES_PORT')
-} }
+        'PORT': os.environ.get('POSTGRES_PORT'), 
+    } } 
 
 
 # Password validation
@@ -144,3 +144,4 @@ CELERY_RESULT_BACKEND = "redis://localhost:6379"
 
 AUTH_USER_MODEL = "account.CustomUser"
 
+# factory.Faker._DEFAULT_LOCALE = 'en_US'
