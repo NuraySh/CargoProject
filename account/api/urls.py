@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
-from account.api.views import PhonePrefixList, RegisterUser
+from account.api.views import PhonePrefixList
 
 urlpatterns = [
     path('phone-prefixes/', PhonePrefixList.as_view()),
