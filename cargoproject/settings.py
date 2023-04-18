@@ -64,7 +64,7 @@ ROOT_URLCONF = 'cargoproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -145,3 +145,6 @@ CELERY_RESULT_BACKEND = "redis://localhost:6379"
 AUTH_USER_MODEL = "account.CustomUser"
 
 # factory.Faker._DEFAULT_LOCALE = 'en_US'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
