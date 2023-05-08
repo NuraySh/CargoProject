@@ -5,7 +5,6 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from rest_framework import serializers
 
-
 from account.models import CustomUser, PhonePrefix, Warehouse
 from account.tokens import account_activation_token
 
@@ -15,25 +14,25 @@ class PhonePrefixSerializer(serializers.ModelSerializer):
         model = PhonePrefix
         fields = "__all__"
 
-    def create(self, validated_data):
-        return PhonePrefix.objects.create(**validated_data)
-
 
 class BranchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Warehouse
         fields = "__all__"
 
-    def create(self, validated_data):
-        return Warehouse.objects.create(**validated_data)
-
 
 class RegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True, required=True, style={"input_type": "password"}
     )
-    phone_prefix = PhonePrefixSerializer(many=False)
-    branch = BranchSerializer(many=False)
+    phone_prefix = serializers.PrimaryKeyRelatedField(
+            queryset = PhonePrefix.objects.all(), 
+        
+        )
+    branch = serializers.PrimaryKeyRelatedField(
+            queryset = Warehouse.objects.all(), 
+            
+        )
 
     class Meta:
         model = CustomUser
@@ -60,18 +59,14 @@ class RegistrationSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        phone_prefix_data = validated_data.pop("phone_prefix")
-        warehouse_data = validated_data.pop("branch")
-        phone_prefix = PhonePrefix.objects.create(**phone_prefix_data)
-        warehouse = Warehouse.objects.create(**warehouse_data)
         user = CustomUser.objects.create_user(
             email=validated_data["email"],
             password=validated_data["password"],
             first_name=validated_data["first_name"],
             last_name=validated_data["last_name"],
             gender=validated_data["gender"],
-            phone_prefix=phone_prefix,
-            branch=warehouse,
+            phone_prefix=validated_data['phone_prefix'],
+            branch=validated_data['branch'],
             phone=validated_data["phone"],
             gov_id_prefix=validated_data["gov_id_prefix"],
             gov_id=validated_data["gov_id"],
