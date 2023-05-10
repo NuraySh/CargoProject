@@ -4,7 +4,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from rest_framework import serializers
-
+import re
 from account.models import CustomUser, PhonePrefix, Warehouse
 from account.tokens import account_activation_token
 
@@ -56,7 +56,37 @@ class RegistrationSerializer(serializers.ModelSerializer):
         password_confirm = self.context.get("request").data.get("password_confirm")
         if password and password_confirm and password != password_confirm:
             raise serializers.ValidationError({"password": "Passwords do not match."})
+        return attrs 
+    def validate_email(self, attrs):
+        email = attrs.get("email")
+        if CustomUser.objects.filter(email=email).exists():
+            raise serializers.ValidationError({"email": "Email already exists."})
         return attrs
+    
+    def validate_firstname(self, attrs):
+        firstname = attrs.get("first_name")
+        if not re.match('^[A-Za-z]+$', firstname):
+            raise serializers.ValidationError({"first_name": "First name should only include letters."})
+        return attrs
+    
+    def validate_lastname(self, attrs):
+        lastname = attrs.get("last_name")
+        if not re.match('^[A-Za-z]+$', lastname):
+            raise serializers.ValidationError({"first_name": "First name should only include letters."})
+        return attrs
+    
+    def validate_phone(self, attrs):
+        phone = attrs.get("phone")
+        if not re.match("^[0-9]+$", phone) or not re.match("^\d{7}$", phone):
+            raise serializers.ValidationError({"phone": "Phone should be numbers and only 7 digits"})
+
+    def validate_pincode(self, attrs):
+        pincode = attrs.get("pincode")
+        if not re.match("^\w{7}$", pincode) or not re.match("^[A-Za-z0-9_-]*$", pincode):
+            raise serializers.ValidationError({"pin_code": "Pin code should only contain 7 digits"})
+
+    def create(self, validated_data):
+        password = validated_data.pop("password")
 
     def create(self, validated_data):
         user = CustomUser.objects.create_user(
