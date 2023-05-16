@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     
      #third-party apps
      'rest_framework',
+     'rest_framework.authtoken',
     #local apps
     'account',
     'core', 
@@ -148,3 +149,12 @@ AUTH_USER_MODEL = "account.CustomUser"
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}

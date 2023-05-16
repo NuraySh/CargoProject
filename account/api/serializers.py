@@ -1,10 +1,13 @@
+import re
+
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from rest_framework import serializers
-import re
+from rest_framework.validators import UniqueValidator
+
 from account.models import CustomUser, PhonePrefix, Warehouse
 from account.tokens import account_activation_token
 
@@ -22,17 +25,22 @@ class BranchSerializer(serializers.ModelSerializer):
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(
+        validators=[
+            UniqueValidator(
+                queryset=CustomUser.objects.all(), message="Email already exists."
+            )
+        ]
+    )
     password = serializers.CharField(
         write_only=True, required=True, style={"input_type": "password"}
     )
     phone_prefix = serializers.PrimaryKeyRelatedField(
-            queryset = PhonePrefix.objects.all(), 
-        
-        )
+        queryset=PhonePrefix.objects.all(),
+    )
     branch = serializers.PrimaryKeyRelatedField(
-            queryset = Warehouse.objects.all(), 
-            
-        )
+        queryset=Warehouse.objects.all(),
+    )
 
     class Meta:
         model = CustomUser
@@ -51,42 +59,50 @@ class RegistrationSerializer(serializers.ModelSerializer):
             "branch",
         )
 
-    def validate(self, attrs):
-        password = attrs.get("password")
-        password_confirm = self.context.get("request").data.get("password_confirm")
-        if password and password_confirm and password != password_confirm:
-            raise serializers.ValidationError({"password": "Passwords do not match."})
-        return attrs 
-    def validate_email(self, attrs):
-        email = attrs.get("email")
-        if CustomUser.objects.filter(email=email).exists():
-            raise serializers.ValidationError({"email": "Email already exists."})
-        return attrs
-    
-    def validate_firstname(self, attrs):
-        firstname = attrs.get("first_name")
-        if not re.match('^[A-Za-z]+$', firstname):
-            raise serializers.ValidationError({"first_name": "First name should only include letters."})
-        return attrs
-    
-    def validate_lastname(self, attrs):
-        lastname = attrs.get("last_name")
-        if not re.match('^[A-Za-z]+$', lastname):
-            raise serializers.ValidationError({"first_name": "First name should only include letters."})
-        return attrs
-    
-    def validate_phone(self, attrs):
-        phone = attrs.get("phone")
-        if not re.match("^[0-9]+$", phone) or not re.match("^\d{7}$", phone):
-            raise serializers.ValidationError({"phone": "Phone should be numbers and only 7 digits"})
+    # def validate(self, attrs):
+    #     password = attrs.get("password")
+    #     password_confirm = self.context.get("request").data.get("password_confirm")
+    #     if password and password_confirm and password != password_confirm:
+    #         raise serializers.ValidationError({"password": "Passwords do not match."})
+    #     return attrs
 
-    def validate_pincode(self, attrs):
-        pincode = attrs.get("pincode")
-        if not re.match("^\w{7}$", pincode) or not re.match("^[A-Za-z0-9_-]*$", pincode):
-            raise serializers.ValidationError({"pin_code": "Pin code should only contain 7 digits"})
+    # def validate_firstname(self, attrs):
+    #     firstname = attrs.get("first_name")
+    #     if not re.match('^[A-Za-z]+$', firstname):
+    #         raise serializers.ValidationError({"first_name": "First name should only include letters."})
+    #     return attrs
 
-    def create(self, validated_data):
-        password = validated_data.pop("password")
+    # def validate_lastname(self, attrs):
+    #     lastname = attrs.get("last_name")
+    #     if not re.match('^[A-Za-z]+$', lastname):
+    #         raise serializers.ValidationError({"first_name": "First name should only include letters."})
+    #     return attrs
+
+    # def validate_phone(self, attrs):
+    #     phone = attrs.get("phone")
+    #     if not re.match("^[0-9]+$", phone) or not re.match("^\d{7}$", phone):
+    #         raise serializers.ValidationError({"phone": "Phone should be numbers and only 7 digits"})
+    #     return attrs
+    # def validate_pincode(self, attrs):
+    #     pincode = attrs.get("pin_code")
+    #     if not re.match("^\w{7}$", pincode) or not re.match("^[A-Za-z0-9_-]*$", pincode):
+    #         raise serializers.ValidationError({"pin_code": "Pin code should only contain 7 digits"})
+    #     return attrs
+    # def validate_govid(self, value):
+    #     print('calling..')
+    #     gov_id = value
+    #     prefix = self.initial_data.get('gov_id_prefix')
+    #     regex1 = "^\d{8}$"
+    #     regex2 = "^\d{7}$"
+    #     regex3 = "^(?:\d{5}|\d{6})$"
+    #     validators = {"AZE": regex1, "AA": regex2, "MYI": regex3, "DYI": regex3}
+
+    #     if re.match("^[0-9]+$", gov_id):
+    #         if not re.match(validators[prefix], gov_id):
+    #             raise serializers.ValidationError("Please enter right numbers of digits(serializer)")
+    #     else:
+    #         raise serializers.ValidationError("All numbers have to be digit(serializer)")
+    #     return value
 
     def create(self, validated_data):
         user = CustomUser.objects.create_user(
@@ -95,8 +111,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
             first_name=validated_data["first_name"],
             last_name=validated_data["last_name"],
             gender=validated_data["gender"],
-            phone_prefix=validated_data['phone_prefix'],
-            branch=validated_data['branch'],
+            phone_prefix=validated_data["phone_prefix"],
+            branch=validated_data["branch"],
             phone=validated_data["phone"],
             gov_id_prefix=validated_data["gov_id_prefix"],
             gov_id=validated_data["gov_id"],
