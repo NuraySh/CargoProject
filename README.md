@@ -19,7 +19,7 @@ The cargo/delivery website backend is being developed to handle various function
 3. Configure the PostgreSQL database settings in `settings.py`
 4. Start the PostgreSQL and Redis services using Docker Compose: `docker-compose up -d`
 5. Apply database migrations: `python manage.py migrate`
-6. Start the Celery worker: `celery -A yourprojectname worker --loglevel=info`
+6. Start the Celery worker: `celery -A cargoproject worker --loglevel=info`
 7. Start the Django development server: `python manage.py runserver`
 
 ## Roadmap
