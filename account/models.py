@@ -39,13 +39,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name="email address", max_length=255, unique=True, null=True
     )
     first_name = models.CharField(max_length=25, verbose_name="first name")
-    last_name = models.CharField(max_length=25, verbose_name="first name")
+    last_name = models.CharField(max_length=25, verbose_name="last name")
 
     GENDER = [("m", "male"), ("f", "female")]
 
     gender = models.CharField(max_length=1, choices=GENDER)
 
-    phone_prefix = models.ForeignKey(PhonePrefix, on_delete=models.CASCADE, null=True)
+    phone_prefix = models.ForeignKey(
+        PhonePrefix, on_delete=models.CASCADE, null=True, blank=True
+    )
     phone = models.CharField(max_length=7, validators=[validate_phone])
 
     SERIES = [("AZE", "AZE"), ("AA", "AA"), ("MYI", "MYI"), ("DYI", "DYI")]
@@ -60,7 +62,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     )
     monthly_expense = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     birth_date = models.DateField(null=True)
-    branch = models.ForeignKey(Warehouse, on_delete=models.CASCADE, null=True)
+    branch = models.ForeignKey(
+        Warehouse, on_delete=models.CASCADE, null=True, blank=True
+    )
     is_active = models.BooleanField(default=False)
     is_blocked = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)

@@ -22,7 +22,7 @@ class TestCustomUserValidators(django.test.TestCase):
     def test_phone_invalid_user_creation_length(self):
         with self.assertRaises(ValidationError):
             CustomUserFactory.create(phone="589929")
-    
+
     def test_phone_invalid_user_creation_alldigit(self):
         with self.assertRaises(ValidationError):
             CustomUserFactory.create(phone="5899d9")
@@ -44,7 +44,7 @@ class TestCustomUserValidators(django.test.TestCase):
     def test_gov_id_invalid_user_creation_govid_AZE_length(self):
         with self.assertRaises(ValidationError):
             CustomUserFactory.create(gov_id_prefix="AZE", gov_id="1234567")
-    
+
     def test_gov_id_invalid_user_creation_govid_AZE_alldigit(self):
         with self.assertRaises(ValidationError):
             CustomUserFactory.create(gov_id_prefix="AZE", gov_id="123456f")
@@ -87,4 +87,3 @@ class TestCustomUserValidators(django.test.TestCase):
     def test_gov_id_invalid_user_creation_govid_DYI_alldigit(self):
         with self.assertRaises(ValidationError):
             CustomUserFactory.create(gov_id_prefix="DYI", gov_id="123C567")
-

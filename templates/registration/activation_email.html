@@ -1,0 +1,14 @@
+{% comment %} <p>Hi {{ user.username }},</p>
+<p>Thanks for signing up for MySite! Please click the following link to activate your account:</p>
+<p><a href="http://{{ domain }}{% url 'activate_account' uidb64=uid token=token %}">Activate your account</a></p>
+<p>Best regards,</p>
+<p>The MySite team</p> {% endcomment %}
+
+
+{% autoescape off %}
+    Hi {{ user.first_name }},
+
+    Your account has successfully created. Please click below link to activate your account
+
+    http://{{ domain }}{% url 'activate_account' uidb64=uid token=token %}
+{% endautoescape %}
