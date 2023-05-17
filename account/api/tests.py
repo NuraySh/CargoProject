@@ -9,63 +9,71 @@ from account.api.serializers import RegistrationSerializer
 from account.factories import CustomUserFactory
 from account.models import CustomUser, PhonePrefix, Warehouse
 
-# class AccountTests(APITestCase, URLPatternsTestCase):
-#     urlpatterns = [
-#         path("api/", include("account.api.urls")),
-#     ]
-# def setUp(self):
-#     self.phone_prefix = PhonePrefix.objects.create(prefix_number="+99470")
-#     self.warehouse = Warehouse.objects.create(name="GN")
+class AccountTests(APITestCase, URLPatternsTestCase):
+    urlpatterns = [
+        path("api/", include("account.api.urls")),
+    ]
+    def setUp(self):
+        self.phone_prefix = PhonePrefix.objects.create(prefix_number="+99470")
+        self.warehouse = Warehouse.objects.create(name="GN")
 
-#     self.data = {
-#         "email": "n@gmail.com",
-#         "password": "12345",
-#         "first_name": "Nuray",
-#         "last_name": "Şahvələdli",
-#         "gender": "f",
-#         "phone_prefix": self.phone_prefix.pk,
-#         "phone": "5899298",
-#         "gov_id_prefix": "AA",
-#         "gov_id": "12345678",
-#         "pin_code": "5zxu4pw",
-#         "birth_date": "1995-08-20",
-#         "branch": self.warehouse.pk,
-#     }
+        self.data = {
+            "email": "n@gmail.com",
+            "password": "12345",
+            "first_name": "Nuray",
+            "last_name": "Shahvalaldi", #dont accept Azerbaijani letters
+            "gender": "f",
+            "phone_prefix": self.phone_prefix.pk,
+            "phone": "5899298",
+            "gov_id_prefix": "AA",
+            "gov_id": "1234567",
+            "pin_code": "5zxu4pw",
+            "birth_date": "1995-08-20",
+            "branch": self.warehouse.pk,
+        }
 
 
-# def test_create_account(self):
+    def test_create_account(self):
+        url = reverse("auth_register")
+        response = self.client.post(url, self.data, format = "json")
+        print(response.data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(CustomUser.objects.count(), 1)
+        self.assertEqual(CustomUser.objects.get().email, "n@gmail.com")
 
-#     user = CustomUserFactory()
-#     user_dict = model_to_dict(user)
-#     print(user_dict)
 
-#     url = reverse("auth_register")
-#     response = self.client.post(url, user_dict, format = "json")
-#     print(response.data)
-#     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-#     # self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-#     # self.assertEqual(response.data, {"email": ["Email already exists."]})
-#     # serializer = RegistrationSerializer(data=self.data)
-#     # self.assertEqual(serializer.errors["gov_id"], "Please enter right numbers of digits(serializer)")
-#     self.assertEqual(CustomUser.objects.count(), 1)
-#     self.assertEqual(CustomUser.objects.get().email, "n@gmail.com")
+    def test_firstname_valid(self):
+        self.data["first_name"] = "Murad"
+        serializer = RegistrationSerializer(data=self.data)
+        self.assertTrue(serializer.is_valid())
 
-# def test_validate_govi(self):
-# def test_validate_email_uniqueness(self):
-# # Create a user with an existing email
-#     existing_email = "dwayne@gmail.com"
-#     CustomUserFactory.create(email=existing_email)
+    def test_firstname_invalid(self):
+        self.data["first_name"] = "Nura7"
+        serializer = RegistrationSerializer(data=self.data)
+        serializer.is_valid()
+        print(serializer.errors)
+        self.assertEqual(serializer.errors["first_name"][0],"First name should only include letters." )
 
-#     self.data["email"] = existing_email
+    def test_lastname_valid(self):
+        self.data["last_name"] = "Shahvaladli"
+        serializer = RegistrationSerializer(data=self.data)
+        self.assertTrue(serializer.is_valid())
 
-#     serializer = RegistrationSerializer(data=self.data)
-#     # self.assertFalse(serializer.is_valid())
-#     # print(serializer.errors)
-#     # self.assertEqual(serializer.errors["email"][0], "Email already exists.")
+    def test_lastname_invalid(self):
+        self.data["last_name"] = "Shag@3bad"
+        serializer = RegistrationSerializer(data=self.data)
+        serializer.is_valid()
+        print(serializer.errors)
+        self.assertEqual(serializer.errors["last_name"][0],"Last name should only include letters.")
 
-#     # Create a user with a new email
-#     new_email = "new@example.com"
-#     self.data["email"] = new_email
-
-#     serializer = RegistrationSerializer(data=self.data)
-#     self.assertTrue(serializer.is_valid())
+    # def test_phone_valid(self):
+    #     self.data["phone"] = "1234567"
+    #     serializer = RegistrationSerializer(data=self.data)
+    #     self.assertTrue(serializer.is_valid())
+    
+    # def test_phone_invalid(self):
+    #     self.data["phone"] = "12345678"
+    #     serializer = RegistrationSerializer(data=self.data)
+    #     serializer.is_valid()
+    #     print(serializer.errors)
+    #     self.assertEqual(serializer.errors["phone"][0],"Phone should be numbers and only 7 digits")

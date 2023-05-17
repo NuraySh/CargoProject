@@ -59,49 +59,19 @@ class RegistrationSerializer(serializers.ModelSerializer):
             "branch",
         )
 
-    # def validate(self, attrs):
-    #     password = attrs.get("password")
-    #     password_confirm = self.context.get("request").data.get("password_confirm")
-    #     if password and password_confirm and password != password_confirm:
-    #         raise serializers.ValidationError({"password": "Passwords do not match."})
-    #     return attrs
+    def validate_first_name(self, value):
+        if not re.match('^[A-Za-z]+$', value):
+            raise serializers.ValidationError("First name should only include letters.")
+        return value
 
-    # def validate_firstname(self, attrs):
-    #     firstname = attrs.get("first_name")
-    #     if not re.match('^[A-Za-z]+$', firstname):
-    #         raise serializers.ValidationError({"first_name": "First name should only include letters."})
-    #     return attrs
+    def validate_last_name(self, value):
+        if not re.match('^[A-Za-z]+$', value):
+            raise serializers.ValidationError("Last name should only include letters.")
+        return value
 
-    # def validate_lastname(self, attrs):
-    #     lastname = attrs.get("last_name")
-    #     if not re.match('^[A-Za-z]+$', lastname):
-    #         raise serializers.ValidationError({"first_name": "First name should only include letters."})
-    #     return attrs
-
-    # def validate_phone(self, attrs):
-    #     phone = attrs.get("phone")
-    #     if not re.match("^[0-9]+$", phone) or not re.match("^\d{7}$", phone):
-    #         raise serializers.ValidationError({"phone": "Phone should be numbers and only 7 digits"})
-    #     return attrs
-    # def validate_pincode(self, attrs):
-    #     pincode = attrs.get("pin_code")
-    #     if not re.match("^\w{7}$", pincode) or not re.match("^[A-Za-z0-9_-]*$", pincode):
-    #         raise serializers.ValidationError({"pin_code": "Pin code should only contain 7 digits"})
-    #     return attrs
-    # def validate_govid(self, value):
-    #     print('calling..')
-    #     gov_id = value
-    #     prefix = self.initial_data.get('gov_id_prefix')
-    #     regex1 = "^\d{8}$"
-    #     regex2 = "^\d{7}$"
-    #     regex3 = "^(?:\d{5}|\d{6})$"
-    #     validators = {"AZE": regex1, "AA": regex2, "MYI": regex3, "DYI": regex3}
-
-    #     if re.match("^[0-9]+$", gov_id):
-    #         if not re.match(validators[prefix], gov_id):
-    #             raise serializers.ValidationError("Please enter right numbers of digits(serializer)")
-    #     else:
-    #         raise serializers.ValidationError("All numbers have to be digit(serializer)")
+    # def validate_phone(self, value):
+    #     if not re.match("^[0-9]+$", value) or not re.match("^\d{7}$", value):
+    #         raise serializers.ValidationError("Phone should be numbers and only 7 digits")
     #     return value
 
     def create(self, validated_data):
